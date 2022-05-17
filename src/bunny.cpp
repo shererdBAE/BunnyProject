@@ -23,9 +23,22 @@ bunny::bunny(int mumscolourcode)
     age = 0;
     if (bunnysex == sex::Male) name = maleBunnyNames[rand() % 999 + 0];
     else name = femaleBunnyNames[rand() % 999 + 0];
-    if (rand() % 50 == 0) { infected = true; std::cout << "Infected "; }
+    if (rand() % 10 == 0) { infected = true; std::cout << "Infected "; }
     else infected = false;
     std::cout << "Bunny " << name << " was born!" << std::endl;
+    usleep(1000000);
+}
+
+bunny::bunny(bool isinfected)
+{
+    bunnysex = sex (rand() % 2 );
+    bunnycolour = colour (rand() % 4 );
+    age = rand() % 9 + 0 ; 
+    if (bunnysex == sex::Male) name = maleBunnyNames[rand() % 999 + 0];
+    else name = femaleBunnyNames[rand() % 999 + 0];
+    infected = true;
+//    std::cout << "Infected ";
+//    std::cout << "Bunny " << name << " was born!" << std::endl;
 
     usleep(1000000);
 }
@@ -67,7 +80,7 @@ std::string bunny::getname(){   return name;      }
 
 int bunny::getage(){    return age;     }
 
-bool bunny::getradioactive(){     return infected;    }
+bool bunny::getinfected(){     return infected;    }
 
 bunny::sex bunny::getbunnysex(){    return bunnysex;     }
 
@@ -90,9 +103,14 @@ void bunny::age1year()
     age++;
 }
 
+void bunny::makeradioactive()
+{
+    infected = true;
+}
+
 bool bunny::tooold()
 {
-    if (getage() > 50 && getradioactive()) return true;
-    else if (getage() > 10 && !getradioactive()) return true;
+    if (getage() > 50 && getinfected()) return true;
+    else if (getage() > 10 && !getinfected()) return true;
     else return false;
 }
