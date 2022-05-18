@@ -6,40 +6,34 @@
 
 bunnymanager::bunnymanager(){}
 
-void bunnymanager::initialisebunnylist()
+int bunnymanager::getnumofstartbunnies()
 {
-    std::vector<bunny> startbunnies (numofstartbunnies);
-    // startbunnies[5] = {bunny(), bunny(), bunny(), bunny(), bunny()}; //make 5 bunnies in array
-    for (int i=4; i>=1; i--) {
-        for (int j=4; j>=5-i; j--){
-             if (startbunnies[j].getage() > startbunnies[j-1].getage() ) //sort bunnies by age starting from the back
-    {
-        std::swap(startbunnies[j], startbunnies[j-1]); //swap bunny if the bunny lower in list has a larger age
-    }
-    }}
-    std::list<bunny> mybunnies (std::begin(startbunnies), std::end(startbunnies)); //move bunnies to a list
-   
+    return numofstartbunnies;
 }
 
-std::list<bunny> bunnymanager::initialisebunnylist1()
-{
+std::list<bunny> bunnymanager::initialisebunnylist()
+{ 
     std::vector<bunny> startbunnies (numofstartbunnies);
-//    bunny startbunnies[5] = {bunny(), bunny(true), bunny(), bunny(), bunny()}; //manual bunny initilisation for starting with infected bunnies
-    for (int i=4; i>=1; i--) {
-        for (int j=4; j>=5-i; j--){
-             if (startbunnies[j].getage() > startbunnies[j-1].getage() ) //sort bunnies by age starting from the back
-    {
-        std::swap(startbunnies[j], startbunnies[j-1]); //swap bunny if the bunny lower in list has a larger age
+//    bunny startbunnies[5] = {bunny(true), bunny(true), bunny(true), bunny(), bunny()}; //manual bunny initilisation for starting with infected bunnies
+    for (int i=numofstartbunnies-1; i>=1; i--) {
+        for (int j=numofstartbunnies-1; j>=numofstartbunnies-i; j--){
+             if (startbunnies[j].getage() > startbunnies[j-1].getage() )//sort bunnies by age starting from the back
+            {
+                std::swap(startbunnies[j],  startbunnies[j-1]);                
+            }
+        }
     }
-    }}
     std::list<bunny> bunnylist (std::begin(startbunnies), std::end(startbunnies)); //move bunnies to a list
     return bunnylist;
 }
 
 void bunnymanager::printbunnies(std::list<bunny> bunnylist)
-{
-    std::cout << "There are " << bunnylist.size() << " alive bunnies" << std::endl << std::endl;
-
+{   
+    int size = bunnylist.size();
+    if (size > 1){
+        std::cout << "There are " << size << " alive bunnies" << std::endl << std::endl; }
+    else {std::cout << "There's only " << size << " bunny alive!" << std::endl;}
+    
     for (bunny & thisbunny : bunnylist)
     {
     std::string isinfected; //reset infected message before checking if bunny is infected
@@ -51,7 +45,7 @@ void bunnymanager::printbunnies(std::list<bunny> bunnylist)
         << isinfected << std::endl;
 
 }
-     std::cout << std::endl;
+    std::cout << std::endl;
 }
 
 void bunnymanager::ageallbunnies(std::list<bunny> &bunnylist)
@@ -79,20 +73,17 @@ void bunnymanager::setmumbirthdata(std::list<bunny> bunnylist)
     } 
 }
  
-
-
-
 void bunnymanager::birthbunnies(std::list<bunny> &bunnylist)
 {
-    if (isthereadad(bunnylist)){ //creates bunnies from birth
+    if (isthereadad(bunnylist)){ //creates bunnies only if there is a dad
             for (int a = 0; a < 4; a++) { //goes through colours and adds new bunny
                 for (int b = 0; b < mumcolour[a]; b++){ 
                     bunnylist.push_back(bunny(a));
                     totalbunnies++;
                     }
             }
-        }
-    std::cout << std::endl;
+    std::cout << std::endl;        
+    }
 }
 
 bool bunnymanager::istooold(bunny &thisbunny)
@@ -103,7 +94,6 @@ bool bunnymanager::istooold(bunny &thisbunny)
             deadbunnynames.push_back(thisbunny.getname()); //remove bunny if normal and over 10 or infected and over 50       
         return true; }
     else return false;
-
 }
 
 void bunnymanager::removetopbunny(std::list<bunny> &bunnylist)
@@ -116,47 +106,40 @@ void bunnymanager::removetopbunny(std::list<bunny> &bunnylist)
         i = false;}
         if (istooold(thisbunny)) {
         i = true;
-        }
-            
+        }            
     }
 }
 
-/*void bunnymanager::removedeadbunnies(std::list<bunny> &bunnylist)
+std::list<bunny> bunnymanager::keepalivebunnies(std::list<bunny> bunnylist)
 {
-    std::list<bunny>::iterator it;
-    while( it != bunnylist.end()) //iterate till last bunny element
-    {
-        if (istooold(it){
-            bunnylist.erase (it++);
-        }
-        else it++;
+    std::list<bunny> newbunnylist;
+    for (bunny & thisbunny : bunnylist){
+        if (!istooold(thisbunny)){
+            newbunnylist.push_back(thisbunny);    
+        }    
     }
-
+    return newbunnylist;
 }
 
-/*void bunnymanager::removedeadbunnies(std::list<bunny> &bunnylist)
+int bunnymanager::printdeadbunnynames()
 {
-    bunnylist.remove_if (istooold);
-}
-*/
-
-
-
-
-void bunnymanager::printdeadbunnynames()
-{
-    for (int i = 0; i<numofdeadbunnies; i++){ //for loop lasts as long as number of new dead bunnies
-        std::cout << "Bunny " << deadbunnynames[i] << " has died!" << std::endl;//outputs dead bunnies
-        deadbunnynames.erase(deadbunnynames.begin());
-        usleep(1000000);
-    } 
+    if (numofdeadbunnies>0){    
+        for (int i = 0; i<numofdeadbunnies; i++){ //for loop lasts as long as number of new dead bunnies
+            std::cout << "Bunny " << deadbunnynames[0] << " has died!" << std::endl;//outputs dead bunnies
+            deadbunnynames.erase(deadbunnynames.begin());
+            usleep(1000000);
+        }
+    int deadbunniesprinted = numofdeadbunnies;     
     numofdeadbunnies = 0;
-    std::cout << std::endl;
+    std::cout << std::endl;    
+    return deadbunniesprinted;
+}
+    return 0;
 }
 
-bool bunnymanager::isendcondition()
-{
-      return mybunnies.begin() != mybunnies.end(); //if list is empty end
+bool bunnymanager::isendcondition(int killedbuns, int alivebuns)
+{   
+    return alivebuns !=  killedbuns;//if list is empty end
 }
 
 bool bunnymanager::isculltime(int playoption, std::list<bunny> bunnylist)
@@ -168,7 +151,7 @@ bool bunnymanager::isculltime(int playoption, std::list<bunny> bunnylist)
             else return false; 
         }
         else {
-/*            std::cout << "Press K to cull." << std::endl; 
+            std::cout << "Press K to cull." << std::endl; 
             float timer = 0;
             while (timer < 2)
             {
@@ -182,7 +165,7 @@ bool bunnymanager::isculltime(int playoption, std::list<bunny> bunnylist)
                 usleep (100000);
                 timer += 0.1;
             }
-*/        return false;    
+        return false;    
         }
 }
 
@@ -208,13 +191,11 @@ void bunnymanager::setnumberofinfected(std::list<bunny> bunnylist)
              numberofinfected++; //adds 1 to the number of infected bunnies             mumcolour[int (thisbunny.getbunnycolour())]++; //adds 1 to the colour of a fertile female
         }
     } 
-//    return numberofinfected;
 }
 
 void bunnymanager::makeinfectedbunnies(std::list<bunny> &bunnylist)
 {   
     int bunniesnotinfected = bunnylist.size() - numberofinfected;
-
     if (numberofinfected > bunniesnotinfected){
         for  (bunny & thisbunny : bunnylist){
             if (!thisbunny.getinfected()){
@@ -231,7 +212,6 @@ void bunnymanager::makeinfectedbunnies(std::list<bunny> &bunnylist)
                     thisbunny.makeradioactive();
                     toinfect=0;
                     numberofinfected--; 
-                    std::cout << numberofinfected << "more bunnies to infect" <<std::endl;
                     if (numberofinfected == 0) {return;}
                     }
                     else { toinfect=1;} 
@@ -256,11 +236,9 @@ void bunnymanager::printmumcolurs()
 void bunnymanager::printnumberofdeadbunnies()
 {
     std::cout<< std::endl <<numofdeadbunnies << std::endl;
-//    return numofdeadbunnies;
 }
 
-void bunnymanager::printtotalbunnies(std::list<bunny> bunnylist)
+int bunnymanager::gettotalbunnies(std::list<bunny> bunnylist)
 {
-    std::cout<< std::endl << bunnylist.size() << std::endl;
-//    return numofdeadbunnies;
+    return bunnylist.size();
 }

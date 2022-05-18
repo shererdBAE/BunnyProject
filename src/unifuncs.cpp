@@ -26,8 +26,9 @@ int uni::checkrange(int min, int max){
         std::cout << "Please try again" << std::endl;
 
         i = uni::checknum();
-    }    
+    }        
     buffclear();
+    std::cout << std::endl;
 
     return i;
 }

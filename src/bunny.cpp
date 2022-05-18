@@ -11,9 +11,8 @@ bunny::bunny()
     age = rand() % 9 + 0 ; 
     if (bunnysex == sex::Male) name = maleBunnyNames[rand() % 1000];
     else name = femaleBunnyNames[rand() % 1000];
-    if (rand() % 50 == 0) infected = true;
+    if (rand() % infectedchance == 0) infected = true;
     else infected = false;
-
 }
 
 bunny::bunny(int mumscolourcode)
@@ -23,7 +22,7 @@ bunny::bunny(int mumscolourcode)
     age = 0;
     if (bunnysex == sex::Male) name = maleBunnyNames[rand() % 999 + 0];
     else name = femaleBunnyNames[rand() % 999 + 0];
-    if (rand() % 10 == 0) { infected = true; std::cout << "Infected "; }
+    if (rand() % infectedchance == 0) { infected = true; std::cout << "Infected "; }
     else infected = false;
     std::cout << "Bunny " << name << " was born!" << std::endl;
     usleep(1000000);
@@ -37,8 +36,6 @@ bunny::bunny(bool isinfected)
     if (bunnysex == sex::Male) name = maleBunnyNames[rand() % 999 + 0];
     else name = femaleBunnyNames[rand() % 999 + 0];
     infected = true;
-//    std::cout << "Infected ";
-//    std::cout << "Bunny " << name << " was born!" << std::endl;
 
     usleep(1000000);
 }
